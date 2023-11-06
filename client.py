@@ -1,22 +1,15 @@
-from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import FileResponse
 import requests
-app = FastAPI()
 
-@app.post("/uploadfile/")
-async def upload_file(file: UploadFile):
-    with open(file.filename, "wb") as f:
-        f.write(file.file.read())
-    return {"filename": file.filename}
+url = "http://localhost:8000/upload-excel"  # Replace with your FastAPI server's URL, i put my local host
+file_path = "vehicles.csv"  
 
-@app.get("/")
-async def read_root():
-    return {"message": "Hello, World"}
+files = {"file": open(file_path, "rb")}
+response = requests.post(url, files=files)
 
-@app.get("/download-excel")
-async def download_excel():
-    file_path = "vehicles.csv"  # Replace with the actual path to your Excel file
-    return FileResponse(file_path, filename="vehicles.csv")
+if response.status_code == 200:
+    print("File successfully uploaded to the server.")
+else:
+    print(f"Failed to upload the file. Status code: {response.status_code}")
 
 
 
