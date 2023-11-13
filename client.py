@@ -3,9 +3,7 @@ import argparse
 import pandas as pd
 from openpyxl import Workbook
 
-def generate_excel():
-    return 0
-    # return new excel
+
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="Client for the task")
@@ -25,8 +23,7 @@ response = requests.post(url, files=files)
 if response.status_code == 200:
     data = response.json()
 
-    # Process the JSON data and generate the Excel file as per the requirements
-    generate_excel(data, args.keys, args.colored)
+
 else:
     print(f"Failed to upload the file. Status code: {response.status_code}")
 
