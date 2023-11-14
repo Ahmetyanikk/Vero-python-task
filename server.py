@@ -1,6 +1,11 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
 import requests
+from pathlib import Path
+from pydantic import BaseModel
+
+
 
 app = FastAPI()
 url = "https://api.baubuddy.de/index.php/login"
@@ -17,18 +22,20 @@ temp=response.text.split('"')
 print(temp[5])
 
 
+
+
+
 @app.get("/")
 async def read_root():
     return {"message": "Hello, World"}
 
 
 @app.post("/upload-excel")
-async def upload_excel(file: UploadFile):
-    if not file.filename.endswith(".csv"):
-        return JSONResponse(content={"error": "File must be in Excel (.csv) format"}, status_code=400)
+async def upload_excel(file: UploadFile ):
 
 
-    with open(file.filename, "wb") as f:
-        f.write(file.file.read())
 
-    return {"message": "File successfully uploaded and processed."}
+    return {"file_name": file.filename}
+
+
+
