@@ -13,7 +13,7 @@ data = {
     'keys': args.keys,
     'colored': args.colored
 }
-print(type('keys'))
+print(data)
 
 
 url = "http://localhost:8000/upload-excel"  # Replace with your FastAPI server's URL, i put my local host
