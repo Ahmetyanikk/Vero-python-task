@@ -20,7 +20,7 @@ url = "http://localhost:8000/upload-excel"  # Replace with your FastAPI server's
 file_path = r"C:\Users\Ahmet\PycharmProjects\untitled8\vehicles.csv"
 
 files = {"file": ("vehicles.csv", open("vehicles.csv", "rb"))}
-response = requests.post(url,files=files,data=data)
+response = requests.post(url,files=files)
 if response.status_code == 200:
     print(response.text)
     # Process the JSON data and generate the Excel file as per the requirements
