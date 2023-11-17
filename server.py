@@ -34,6 +34,12 @@ headers = {
 response = requests.request("POST", url, json=payload, headers=headers)
 temp=response.text.split('"')
 print(temp[5])
+headers = {
+    'Authorization': f'Bearer {temp[5]}',
+    'Content-Type': 'application/json',
+}
+
+
 
 def save_csv(file_contents: bytes, destination: Path):
     with open(destination, "wb") as file_object:
@@ -63,12 +69,16 @@ async def upload_excel(file: UploadFile):
 
 @app.post("/Format-excel")
 async def upload_excel(item: dict):
+    response = requests.get("https://api.baubuddy.de/dev/index.php/v1/vehicles/select/active", headers=headers)
+    responseCsv = response.json()
+
     Dfcsv = pd.read_excel(r'C:\Users\Ahmet\PycharmProjects\pythonProject1\Serverfiles\vehicles.csv')
-    Dfcsv.sort_values(by='gruppe',inplace=True)
+    merged_df = pd.concat([Dfcsv, responseCsv], ignore_index=True)
+    merged_df.sort_values(by='gruppe',inplace=True)
     colored= True
     if colored == True:
         try:
-            styled_df = Dfcsv.style.apply(color_rows, axis=1)
+            styled_df = merged_df.style.apply(color_rows, axis=1)
 
         except:
             print("error")
@@ -78,6 +88,5 @@ async def upload_excel(item: dict):
 
 
     return {"File sent"}
-
 
 
