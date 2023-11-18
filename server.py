@@ -40,7 +40,6 @@ headers = {
 }
 
 
-
 def save_csv(file_contents: bytes, destination: Path):
     with open(destination, "wb") as file_object:
         file_object.write(file_contents)
@@ -68,12 +67,13 @@ async def upload_excel(file: UploadFile):
     return {"File sent"}
 
 @app.post("/Format-excel")
-async def upload_excel(item: dict):
+async def upload_excel():
     response = requests.get("https://api.baubuddy.de/dev/index.php/v1/vehicles/select/active", headers=headers)
-    responseCsv = response.json()
+    responseJson = response.json()
+    responseCsv = pd.DataFrame(responseJson)
+    Dfcsv = pd.read_csv(r'C:\Users\Ahmet\PycharmProjects\pythonProject1\Serverfiles\vehicles.csv',on_bad_lines='skip')
 
-    Dfcsv = pd.read_excel(r'C:\Users\Ahmet\PycharmProjects\pythonProject1\Serverfiles\vehicles.csv')
-    merged_df = pd.concat([Dfcsv, responseCsv], ignore_index=True)
+    merged_df = pd.concat([Dfcsv, responseCsv],ignore_index=True)
     merged_df.sort_values(by='gruppe',inplace=True)
     colored= True
     if colored == True:
@@ -82,11 +82,10 @@ async def upload_excel(item: dict):
 
         except:
             print("error")
-    excel_writer = pd.ExcelWriter("formatted_excel_with_conditions.xlsx", engine='openpyxl')
-    styled_df.to_excel(excel_writer, sheet_name='Sheet1', index=False)
-    excel_writer.save()
+    current_date_iso_formatted = datetime.now().date().isoformat()
+    filename="vehicles_"+current_date_iso_formatted+".xlsx"
+    merged_df.to_excel(r'C:\Users\Ahmet\PycharmProjects\pythonProject1\Serverfiles\\'+filename)
 
-
-    return {"File sent"}
+    return FileResponse(r'C:\Users\Ahmet\PycharmProjects\pythonProject1\Serverfiles\\', filename=filename)
 
 
