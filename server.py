@@ -72,9 +72,9 @@ async def upload_excel():
     responseJson = response.json()
     responseCsv = pd.DataFrame(responseJson)
     Dfcsv = pd.read_csv(r'C:\Users\Ahmet\PycharmProjects\pythonProject1\Serverfiles\vehicles.csv',on_bad_lines='skip')
-
-    merged_df = pd.concat([Dfcsv, responseCsv],ignore_index=True)
-    merged_df.sort_values(by='gruppe',inplace=True)
+    Dfcsv.to_csv(r'C:\Users\Ahmet\PycharmProjects\pythonProject1\Serverfiles\\'+"filename"+".csv")
+    merged_df = pd.concat([responseCsv, Dfcsv],axis=1)
+    merged_df.sort_values(by='gruppe')
     colored= True
     if colored == True:
         try:
